@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build('my-flask-app')
+                }
+            }
+        }
+
+        stage('Push Docker Image to Registry') {
+            steps {
+                script {
+                    docker.withRegistry('https://your_registry_url', 'your_registry_credentials_id') {
+                        docker.image('my-flask-app').push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Cloud Platform') {
+            steps {
+                // Add commands to deploy to your chosen cloud platform
+            }
+        }
+    }
+}
